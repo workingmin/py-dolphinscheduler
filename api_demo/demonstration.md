@@ -18,3 +18,15 @@
   | get_datasource_database.py | 获取数据源库列表 | v1 |
   | get_datasource_table.py | 获取数据源表列表 | v1 |
   | get_datasource_table_columns.py | 获取数据源表列名 | v1 |
+
+<br>
+
+## 项目
+
++ | file | summary | version |
+  | --- | --- | -- |
+  | query_all_project_list.py | 查询所有项目 | v1 |
+  | query_project_info_by_project_code.py | 通过项目Code查询项目信息 | v1 |
+  | create_project.py | 创建项目 | v1 |
+  | update_project.py | 更新项目 | v1 |
+  | delete_project_by_code.py | 通过Code删除项目 | v1 |
