@@ -2,6 +2,8 @@
 
 [TOC]
 
+<br>
+
 ## 数据源
 
 + | file | summary | version |
@@ -13,3 +15,6 @@
   | update_datasource.py | 更新数据源 | v1 |
   | delete_datasource.py | 删除数据源 | v1 |
   | connect_datasource_test.py | 连接数据源测试 | v1 |
+  | get_datasource_database.py | 获取数据源库列表 | v1 |
+  | get_datasource_table.py | 获取数据源表列表 | v1 |
+  | get_datasource_table_columns.py | 获取数据源表列名 | v1 |

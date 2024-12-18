@@ -36,6 +36,6 @@ if __name__ == '__main__':
         if failed:
             code = json_data.get('code')
             msg = json_data.get('msg')
-            print(f'connect failed, code: {code}, msg: {msg}')
+            print(f'Connect failed, code: {code}, msg: {msg}')
     else:
         print(f'Request failed, status: {status_code}')

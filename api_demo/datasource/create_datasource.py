@@ -42,6 +42,6 @@ if __name__ == '__main__':
         if failed:
             code = json_data.get('code')
             msg = json_data.get('msg')
-            print(f'update failed, code: {code}, msg: {msg}')
+            print(f'Create failed, code: {code}, msg: {msg}')
     else:
         print(f'Request failed, status: {status_code}')

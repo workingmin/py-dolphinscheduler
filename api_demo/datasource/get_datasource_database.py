@@ -17,22 +17,27 @@ if __name__ == '__main__':
         
     datasource_id = sys.argv[1]
     
-    url = os.path.join(server_url, 'datasources', datasource_id)
+    url = os.path.join(server_url, 'datasources', 'databases')
     headers = {'token': user_token}
-
-    response = requests.delete(url, headers=headers)
+    params = {
+        'datasourceId': datasource_id,
+    }
+    
+    response = requests.get(url, headers=headers, params=params)
     status_code = response.status_code
     if status_code == HTTPStatus.OK:
         json_data = response.json()
         success = json_data.get('success')
         if success:
             data = json_data.get('data')
-            print(data)
+            for database in data:
+                print(database)
         
         failed = json_data.get('failed')
         if failed:
             code = json_data.get('code')
             msg = json_data.get('msg')
-            print(f'Delete failed, code: {code}, msg: {msg}')
+            print(f'Get failed, code: {code}, msg: {msg}')
     else:
         print(f'Request failed, status: {status_code}')
+    
