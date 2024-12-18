@@ -13,7 +13,7 @@ if __name__ == '__main__':
     url = os.path.join(server_url, 'datasources')
     headers = {'token': user_token}
     
-    name = 'txx'
+    name = "txx"
     params={
         "searchVal": name,
         "pageNo": 1,

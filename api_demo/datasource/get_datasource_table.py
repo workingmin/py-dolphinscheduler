@@ -21,8 +21,8 @@ if __name__ == '__main__':
     url = os.path.join(server_url, 'datasources', 'tables')
     headers = {'token': user_token}
     params = {
-        'datasourceId': datasource_id,
-        'database': database,
+        "datasourceId": datasource_id,
+        "database": database,
     }
     
     response = requests.get(url, headers=headers, params=params)

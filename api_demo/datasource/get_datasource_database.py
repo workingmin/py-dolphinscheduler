@@ -20,7 +20,7 @@ if __name__ == '__main__':
     url = os.path.join(server_url, 'datasources', 'databases')
     headers = {'token': user_token}
     params = {
-        'datasourceId': datasource_id,
+        "datasourceId": datasource_id,
     }
     
     response = requests.get(url, headers=headers, params=params)

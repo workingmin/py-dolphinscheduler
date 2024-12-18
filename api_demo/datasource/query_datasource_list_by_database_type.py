@@ -21,9 +21,13 @@ if __name__ == '__main__':
     server_url = os.getenv('DOLPHINSCHEDULER_SERVER_URL')
     user_token = os.getenv('DOLPHINSCHEDULER_USER_TOKEN')
     
-    url = os.path.join(server_url, 'datasources/list')
+    url = os.path.join(server_url, 'datasources', 'list')
     headers = {'token': user_token}
-    response = requests.get(url, headers=headers, params={"type": database_type})
+    params = {
+        "type": database_type.upper(),
+    }
+    
+    response = requests.get(url, headers=headers, params=params)
     status_code = response.status_code
     if status_code == HTTPStatus.OK:
         json_data = response.json()
