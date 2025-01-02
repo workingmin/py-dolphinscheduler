@@ -3,6 +3,7 @@
 
 from http import HTTPStatus
 import os
+import sys
 import requests
 
 
@@ -22,17 +23,19 @@ if __name__ == '__main__':
 
     response = requests.post(url, headers=headers, json=data)
     status_code = response.status_code
-    if status_code in (HTTPStatus.CREATED, HTTPStatus.OK):
-        json_data = response.json()
-        success = json_data.get('success')
-        if success:
-            data = json_data.get('data')
-            print(data)
-        
-        failed = json_data.get('failed')
-        if failed:
-            code = json_data.get('code')
-            msg = json_data.get('msg')
-            print(f'Create failed, code: {code}, msg: {msg}')
-    else:
+    if status_code not in (HTTPStatus.CREATED, HTTPStatus.OK):
         print(f'Request failed, status: {status_code}')
+        sys.exit(1)
+
+    json_data = response.json()
+    success = json_data.get('success')
+    failed = json_data.get('failed')
+    if (not success) or failed:
+        code = json_data.get('code')
+        msg = json_data.get('msg')
+        print(f'Create failed, code: {code}, msg: {msg}')
+        sys.exit(1)
+    
+    data = json_data.get('data')
+    print(data)
+    

@@ -3,6 +3,7 @@
 
 from http import HTTPStatus
 import os
+import sys
 import requests
 
 
@@ -15,18 +16,20 @@ if __name__ == '__main__':
     
     response = requests.get(url, headers=headers)
     status_code = response.status_code
-    if status_code == HTTPStatus.OK:
-        json_data = response.json()
-        success = json_data.get('success')
-        if success:
-            data = json_data.get('data')
-            for project in data:
-                print(project)
-        
-        failed = json_data.get('failed')
-        if failed:
-            code = json_data.get('code')
-            msg = json_data.get('msg')
-            print(f'Query failed, code: {code}, msg: {msg}')
-    else:
+    if status_code != HTTPStatus.OK:
         print(f'Request failed, status: {status_code}')
+        sys.exit(1)
+    
+    json_data = response.json()
+    success = json_data.get('success')
+    failed = json_data.get('failed')
+    if (not success) or failed:
+        code = json_data.get('code')
+        msg = json_data.get('msg')
+        print(f'Query failed, code: {code}, msg: {msg}')
+        sys.exit(1)
+        
+    data = json_data.get('data')
+    for project in data:
+        print(project)
+        
