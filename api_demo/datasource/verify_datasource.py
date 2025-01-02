@@ -12,15 +12,18 @@ if __name__ == '__main__':
     user_token = os.getenv('DOLPHINSCHEDULER_USER_TOKEN')
     
     if len(sys.argv) < 2:
-        print("Usage: {} <datasource-id>".format(sys.argv[0]))
+        print("Usage: {} <datasource-name>".format(sys.argv[0]))
         sys.exit(1)
+        
+    datasource_name = sys.argv[1]
 
-    datasource_id = sys.argv[1]
-    
-    url = os.path.join(server_url, 'datasources', datasource_id, 'connect-test')
+    url = os.path.join(server_url, 'datasources', 'verify-name')
     headers = {'token': user_token}
+    params = {
+        "name": datasource_name,
+    }
     
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     status_code = response.status_code
     if status_code != HTTPStatus.OK:
         print(f'Request failed, status: {status_code}')
@@ -32,8 +35,8 @@ if __name__ == '__main__':
     if (not success) or failed:
         code = json_data.get('code')
         msg = json_data.get('msg')
-        print(f'Connect failed, code: {code}, msg: {msg}')
+        print(f'Verify failed, code: {code}, msg: {msg}')
         sys.exit(1)
         
     data = json_data.get('data')
-    print(data)
+    print(f"Verifie {data}, data source name does not exist")

@@ -25,19 +25,19 @@ if __name__ == '__main__':
     
     response = requests.get(url, headers=headers, params=params)
     status_code = response.status_code
-    if status_code == HTTPStatus.OK:
-        json_data = response.json()
-        success = json_data.get('success')
-        if success:
-            data = json_data.get('data')
-            for database in data:
-                print(database)
-        
-        failed = json_data.get('failed')
-        if failed:
-            code = json_data.get('code')
-            msg = json_data.get('msg')
-            print(f'Get failed, code: {code}, msg: {msg}')
-    else:
+    if status_code != HTTPStatus.OK:
         print(f'Request failed, status: {status_code}')
+        sys.exit(1)
     
+    json_data = response.json()
+    success = json_data.get('success')
+    failed = json_data.get('failed')
+    if (not success) or failed:
+        code = json_data.get('code')
+        msg = json_data.get('msg')
+        print(f'Get failed, code: {code}, msg: {msg}')
+        sys.exit(1)
+        
+    data = json_data.get('data')
+    for database in data:
+        print(database)
