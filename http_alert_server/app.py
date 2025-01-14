@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+import json
+from flask import Flask, current_app, jsonify, request
 
 
 app = Flask(__name__)
@@ -8,26 +9,37 @@ DOLPHINSCHEDULER_ALERT_CONTENT_FIELD = "dsAlertMsg"
 @app.route("/alert", methods=['POST'])
 def alert():
     data = request.json
-    process_alerts = data.get(DOLPHINSCHEDULER_ALERT_CONTENT_FIELD)
-    for process_alert in process_alerts:
-        project_code = process_alert.get('projectCode')
-        project_name = process_alert.get('projectName')
-        owner = process_alert.get('owner')
-        process_id = process_alert.get('processId')
-        process_definition_code = process_alert.get('processDefinitionCode')
-        process_name = process_alert.get('processName')
-        process_type = process_alert.get('processType')
-        process_state = process_alert.get('processState')
-        modify_by = process_alert.get('modifyBy')
-        recovery = process_alert.get('recovery')
-        run_times = process_alert.get('runTimes')
-        process_start_time = process_alert.get('processStartTime')
-        process_end_time = process_alert.get('processEndTime')
-        process_host = process_alert.get('processHost')
-        
-        
+    msg = json.loads(data.get(DOLPHINSCHEDULER_ALERT_CONTENT_FIELD))
     
-    return jsonify({"code": 0})
+    alerts = []
+    if type(msg) == list:
+        alerts = msg
+    elif type(msg) == dict:
+        alerts.append(msg)
+    else:
+        current_app.logger.error(f"error type. msg: {msg}")
+        return jsonify({"success": False})
+    
+    for alert in alerts:
+        process_state = alert.get('processState')
+        if process_state is None:
+            # ingore non process alert
+            break
+        
+        if process_state not in ["SUCCESS", "FAILURE"]:
+            # ingore non-end process alert
+            break
+        
+        s = set(['projectCode', 'projectName', 'owner',
+             'processId', 'processDefinitionCode', 'processName', 'processType',
+             'recovery', 'runTimes',
+             'processStartTime', 'processEndTime', 'processHost'])
+        if s.issubset(alert.keys()):
+            current_app.logger.info(f"process end alter: {alert}")
+            return jsonify({"success": True})
+    
+    current_app.logger.debug(f"ingore: {msg}")
+    return jsonify({"success": False})
 
 if __name__ == "__main__":
     app.run()

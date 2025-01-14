@@ -1,6 +1,34 @@
 # 使用文档
 
+<style>
+  h1 {
+    counter-reset: h2
+  }
+  h2 {
+    counter-reset: h3
+  }
+  h3 {
+    counter-reset: h4
+  }
+  h2:before {
+    counter-increment: h2;
+    content: counter(h2) ". "
+  }
+  h3:before {
+    counter-increment: h3;
+    content: counter(h2) "." counter(h3) ". "
+  }
+  h4:before {
+    counter-increment: h4;
+    content: counter(h2) "." counter(h3) "." counter(h4) ". "
+  }
+</style>
+
 [TOC]
+
+<br>
+
+> base on dolphinscheduler-3.2.2
 
 <br>
 
@@ -20,7 +48,34 @@
 
 <br>
 
-## 功能介绍（部分）
+## 功能介绍
+
+### 项目管理
+
+### 任务类型
+
+#### 默认任务参数
+
++ | 任务参数 | Parameter | API Request Param | 描述 |
+  | --- | --- | --- | --- |
+  | 任务名称 | Node Name | name | 任务的名称，同一个工作流定义中的节点名称不能重复。 |
+  | 运行标志 | Run Flag | flag | 标识这个节点是否需要调度执行，如果不需要执行，可以打开禁止执行开关。 |
+  | 缓存执行 | Cache Execution | | 标识这个节点是否需要进行缓存，如果缓存，则对于相同标识（相同任务版本，相同任务定义，相同参数传入）的任务进行缓存，运行时若已经存在缓存过的任务时，不在重复执行，直接复用结果。|
+  | 描述 | Description | description | 当前节点的功能描述。 |
+  | 任务优先级 | Task Priority | taskPriority | worker线程数不足时，根据优先级从高到低依次执行任务，优先级一样时根据先到先得原则执行。 |
+  | Worker分组 | Worker Group | workerGroup | 设置分组后，任务会被分配给worker组的机器机执行。若选择Default，则会随机选择一个worker执行。 |
+  | 任务组名称 | Task Group Name | taskGroupId(ref taskGroupName) | 任务资源组，未配置则不生效。 |
+  | 环境名称 | Environment Name | environmentCode(ref environmentName) | 配置任务执行的环境。 |
+  | 失败重试次数 | Number of Failed Retries | failRetryTimes | 任务失败重新提交的次数，可以在下拉菜单中选择或者手动填充。 |
+  | 失败重试间隔 | Failure Retry Interval | failRetryInterval | 任务失败重新提交任务的时间间隔，可以在下拉菜单中选择或者手动填充。 |
+  | CPU配额 | CPU Quota | cpuQuota | 为执行的任务分配指定的CPU时间配额，单位为百分比，默认-1代表不限制，例如1个核心的CPU满载是100%，16个核心的是1600%。 |
+  | 最大内存 | Max Memory | memoryMax | 为执行的任务分配指定的内存大小，超过会触发OOM被Kill同时不会进行自动重试，单位MB，默认-1代表不限制。 |
+  | 超时告警 | Timeout Alarm | timeoutNotifyStrategy | 	设置超时告警、超时失败。当任务超过"超时时长"后，会发送告警邮件并且任务执行失败。 |
+  | 资源 | Resources | resourceIds(ref resources) | 	任务执行时所需资源文件 |
+  | 前置任务 | Predecessor Task | preTaskCode(ref preTask) | 设置当前任务的前置（上游）任务。 |
+  | 延时执行时间 | Delayed Execution Time | delayTime | 任务延迟执行的时间，以分为单位 |
+
+<br>
 
 ### 数据质量
 
@@ -77,8 +132,6 @@
         deactivate master
 ```
 
-<br>
-
 + > 用户在界面定义任务，用户输入值保存在TaskParam中 运行任务时，Master会解析TaskParam，封装DataQualityTask所需要的参数下发至Worker。 Worker运行数据质量任务，数据质量任务在运行结束之后将统计结果写入到指定的存储引擎中，当前数据质量任务结果存储在dolphinscheduler的t_ds_dq_execute_result表中 Worker发送任务结果给Master，Master收到TaskResponse之后会判断任务类型是否为DataQualityTask，如果是的话会根据taskInstanceId从t_ds_dq_execute_result中读取相应的结果，然后根据用户配置好的检查方式，操作符和阈值进行结果判断，如果结果为失败的话，会根据用户配置好的的失败策略进行相应的操作，告警或者中断
 
 <br>
@@ -126,14 +179,6 @@
             // 等于操作符
             public boolean compare(Number x, Number y) { return x == y; }
         },
-        GREATER_THAN {
-            // 大于操作符
-            public boolean compare(Number x, Number y) { return x > y; }
-        },
-        GREATER_EQUAL {
-            // 大于等于操作符
-            public boolean compare(Number x, Number y) { return x >= y; }
-        },
         LESS_THAN {
             // 小于操作符
             public boolean compare(Number x, Number y) { return x < y; }
@@ -141,6 +186,14 @@
         LESS_EQUAL {
             // 小于等于操作符
             public boolean compare(Number x, Number y) { return x <= y; }
+        },
+        GREATER_THAN {
+            // 大于操作符
+            public boolean compare(Number x, Number y) { return x > y; }
+        },
+        GREATER_EQUAL {
+            // 大于等于操作符
+            public boolean compare(Number x, Number y) { return x >= y; }
         },
         NOT_EQUAL {
             // 不等于操作符
@@ -236,5 +289,6 @@
             }
         }
     }
+    ```
 
-```
+<br>

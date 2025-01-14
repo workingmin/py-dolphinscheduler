@@ -52,18 +52,14 @@ if __name__ == '__main__':
     total_list = data.get('totalList')
     for process_instance in total_list:
         process_instance = {k: v for k, v in process_instance.items() \
-            if k in set(['id', 'processDefinitionCode', 'projectCode', 'state', 'recovery', 'startTime', 'endTime', 'runTimes', 'name', 'commandType', 'scheduleTime', 'duration', 'dryRun'])}
+            if k in set(['id', 'processDefinitionCode', 'projectCode', 'state', 'recovery',
+                         'startTime', 'endTime', 'runTimes', 'name', 'commandType', 'scheduleTime', 'duration', 'dryRun'])}
         
         # XXX: query task list by process instance id
         process_instance_id = process_instance.get('id')
-
         url = os.path.join(server_url, 'projects', project_code, 'process-instances', str(process_instance_id), 'tasks')
         
-        params = {
-            "id": process_instance_id,
-        }
-        
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers)
         status_code = response.status_code
         if status_code != HTTPStatus.OK:
             print(f'Request failed, status: {status_code}')
@@ -75,13 +71,12 @@ if __name__ == '__main__':
         if (not success) or failed:
             code = json_data.get('code')
             msg = json_data.get('msg')
-            print(f'Query tasks, code: {code}, msg: {msg}')
+            print(f'Query tasks failed, code: {code}, msg: {msg}')
             sys.exit(1)
             
         task_list = json_data.get('data').get('taskList')
-        task_list = [ {k: v for k, v in task.items() \
-            if k in set(['id', 'name', 'taskType', 'taskCode'])} \
-                for task in task_list ]
+        task_list = [ {k: v for k, v in task.items() if k in set(['id', 'name', 'taskType', 'taskCode'])} \
+            for task in task_list ]
         
         process_instance['taskList'] = task_list
         print(process_instance)
