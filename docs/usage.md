@@ -292,3 +292,7 @@
     ```
 
 <br>
+
+## 缺陷列表
+
++ UI设置：数据质量任务（data quality task）——字段长度校验规则（field length check rule）——逻辑操作符（logic operator），保存失效
