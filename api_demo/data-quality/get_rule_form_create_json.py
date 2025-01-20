@@ -41,6 +41,16 @@ if __name__ == '__main__':
     
     data = json_data.get('data')
     form_create_json = json.loads(data)
-    fields = [ x.get('field') for x in form_create_json ]
-    print(fields)
     
+    fields = [ x.get('field') for x in form_create_json ]
+    print(fields, '\n')
+    
+    for x in form_create_json:
+        field = x.get('field')
+        options = x.get('options')
+        if options is not None:
+            options = [ {k: v for k, v in option.items() if k in set(['label', 'value'])} for option in options ]
+        print({
+            'field': field,
+            'options': options,
+        })
