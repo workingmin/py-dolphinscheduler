@@ -87,8 +87,8 @@
 
 + | file | summary | version |
   | --- | --- | -- |
-  | task-data-quality/create_process_definition_for_null_value_check.py | 创建有空值检查任务的流程定义 | v1 |
-  | task-data-quality/update_process_definition_for_null_value_check.py | 更新有空值检查任务的流程定义 | v1 |
+  | data-quality-task/create_process_definition_for_single_table_check.py | 创建有单表检查（无自定义SQL检查）数据质量任务的流程定义 | v1 |
+  | data-quality-task/update_process_definition_for_single_table_check.py | 更新有单表检查（无自定义SQL检查）数据质量任务的流程定义 | v1 |
 
 <br>
 
@@ -110,6 +110,8 @@
   | delete_schedule_by_id.py | 根据定时id删除定时数据 | v1 |
   | online_schedule.py | 定时上线 | v1 |
   | offline_schedule.py | 定时下线 | v1 |
+  | v2_get_schedule_by_id.py | 根据定时id获取定时 | v2 |
+  + **环境列表为空时，environmentCode无有效值，v2创建与更新定时api不可用**
 
 <br>
 

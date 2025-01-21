@@ -11,7 +11,7 @@ if __name__ == '__main__':
     server_url = os.getenv('DOLPHINSCHEDULER_SERVER_URL')
     user_token = os.getenv('DOLPHINSCHEDULER_USER_TOKEN')
     
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         print("Usage: {} <project-code> <schedule-id>".format(sys.argv[0]))
         sys.exit(1)
         

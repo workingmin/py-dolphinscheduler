@@ -41,7 +41,7 @@ def gen_task_code(project_code):
     response = requests.get(url, headers=headers, params=params)
     status_code = response.status_code
     if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}')
+        print(f'Request failed, status: {status_code}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
         return None
     
     json_data = response.json()
@@ -67,7 +67,7 @@ def get_rule_form_create_json_keys(rule_id):
     response = requests.get(url, headers=headers, params=params)
     status_code = response.status_code
     if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}')
+        print(f'Request failed, status: {status_code}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
         return None
         
     json_data = response.json()
@@ -200,7 +200,7 @@ if __name__ == '__main__':
     response = requests.post(url, headers=headers, params=params)
     status_code = response.status_code
     if status_code not in (HTTPStatus.CREATED, HTTPStatus.OK):
-        print(f'Request failed, status: {status_code}')
+        print(f'Request failed, status: {status_code}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
         sys.exit(1)
     
     json_data = response.json()
