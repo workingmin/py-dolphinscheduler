@@ -165,7 +165,7 @@ if __name__ == '__main__':
     # Update process definition
     url = os.path.join(server_url, 'projects', project_code, 'process-definition', process_definition_code)
     headers = {'token': user_token}
-        
+    
     name = yaml_data.get('name')
     description = yaml_data.get('description')
     global_params = "[]"
