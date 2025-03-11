@@ -28,14 +28,13 @@ if __name__ == '__main__':
     # XXX: Resilient to service time fluctuations
     end_date = (current_time + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
     page_no = 1
-    page_size = 100
 
     while True:
         params = {
             "startDate": start_date,
             "endDate": end_date,
             "pageNo": page_no,
-            "pageSize": page_size,
+            "pageSize": PAGE_SIZE,
         }
         
         response = requests.get(url, headers=headers, params=params)
