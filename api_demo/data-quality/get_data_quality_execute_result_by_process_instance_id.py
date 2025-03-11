@@ -1,12 +1,14 @@
 #!/bin/env python3
 # -*- coding: utf-8 -*-
 
+
 import datetime
 from http import HTTPStatus
 import os
 import sys
 import requests
 
+PAGE_SIZE = 100
 
 if __name__ == '__main__':
     server_url = os.getenv('DOLPHINSCHEDULER_SERVER_URL')
@@ -22,11 +24,12 @@ if __name__ == '__main__':
     headers = {'token': user_token}
     
     current_time = datetime.datetime.now()
-    start_date = (current_time - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
-    end_date = current_time.strftime("%Y-%m-%d")
+    start_date = (current_time - datetime.timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+    # XXX: Resilient to service time fluctuations
+    end_date = (current_time + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
     page_no = 1
-    page_size = 10
-    
+    page_size = 100
+
     while True:
         params = {
             "startDate": start_date,
