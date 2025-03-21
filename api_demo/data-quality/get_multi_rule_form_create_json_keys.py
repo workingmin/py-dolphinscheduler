@@ -1,7 +1,6 @@
 #!/bin/env python3
 # -*- coding: utf-8 -*-
 
-from http import HTTPStatus
 import json
 import os
 import sys
