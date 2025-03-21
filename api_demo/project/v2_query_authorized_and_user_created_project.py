@@ -13,14 +13,15 @@ if __name__ == '__main__':
 
     url = os.path.join(server_url, 'v2', 'projects', 'created-and-authed')
     headers = {'token': user_token}
-    
-    response = requests.get(url, headers=headers)
-    status_code = response.status_code
-    if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}')
+        
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}')
         sys.exit(1)
-    
-    json_data = response.json()
+
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:

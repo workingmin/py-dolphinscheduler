@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
-from http import HTTPStatus
 import json
 import os
 import sys
@@ -38,13 +37,14 @@ def gen_task_code(project_code):
         'genNum': 1
     }
     
-    response = requests.get(url, headers=headers, params=params)
-    status_code = response.status_code
-    if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
         return None
-    
-    json_data = response.json()
+
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:
@@ -64,13 +64,14 @@ def get_rule_form_create_json_keys(rule_id):
         "ruleId": rule_id,
     }
     
-    response = requests.get(url, headers=headers, params=params)
-    status_code = response.status_code
-    if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
         return None
-        
-    json_data = response.json()
+
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:
@@ -197,13 +198,14 @@ if __name__ == '__main__':
         'executionType': execution_type,
     }
     
-    response = requests.post(url, headers=headers, params=params)
-    status_code = response.status_code
-    if status_code not in (HTTPStatus.CREATED, HTTPStatus.OK):
-        print(f'Request failed, status: {status_code}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
+    try:
+        response = requests.post(url, headers=headers, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}. at {sys._getframe().f_lineno} in {sys._getframe().f_code.co_name}')
         sys.exit(1)
-    
-    json_data = response.json()
+
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:

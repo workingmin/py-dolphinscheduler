@@ -21,9 +21,9 @@ def alert():
         return jsonify({"success": False})
     
     alerts = []
-    if type(msg) == list:
+    if isinstance(msg, list):
         alerts = msg
-    elif type(msg) == dict:
+    elif isinstance(msg, dict):
         alerts.append(msg)
     else:
         current_app.logger.error(f"Invalid message type. msg: {msg}")
@@ -39,15 +39,15 @@ def alert():
             # ingore non-end process alert
             break
         
-        s = set(['projectCode', 'projectName', 'owner',
-             'processId', 'processDefinitionCode', 'processName', 'processType',
-             'recovery', 'runTimes',
-             'processStartTime', 'processEndTime', 'processHost'])
-        if s.issubset(alert.keys()):
+        required_keys = {'projectCode', 'projectName', 'owner', 'processId', 
+                         'processDefinitionCode', 'processName', 'processType', 
+                         'recovery', 'runTimes', 'processStartTime', 
+                         'processEndTime', 'processHost'}
+        if required_keys.issubset(alert.keys()):
             current_app.logger.info(f"Process end alert: {alert}")
             return jsonify({"success": True})
     
-    current_app.logger.debug(f"Ignored: {msg}")
+    current_app.logger.debug(f"Ignored alert content: {msg}")
     return jsonify({"success": False})
 
 if __name__ == "__main__":

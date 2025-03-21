@@ -20,7 +20,14 @@ if __name__ == '__main__':
         print(f'Request failed, status: {status_code}')
         sys.exit(1)
     
-    json_data = response.json()
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}')
+        sys.exit(1)    
+    
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:

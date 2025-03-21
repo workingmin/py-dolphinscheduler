@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-from http import HTTPStatus
 import json
 import os
 import sys
@@ -41,10 +40,12 @@ if __name__ == '__main__':
         'processInstancePriority': 'MEDIUM',
         }
     
-    response = requests.post(url, headers=headers, params=params)
-    status_code = response.status_code
-    if status_code not in (HTTPStatus.CREATED, HTTPStatus.OK):
-        print(f'Request failed, status: {status_code}')
+    try:
+        response = requests.post(url, headers=headers, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}')
         sys.exit(1)
         
     json_data = response.json()

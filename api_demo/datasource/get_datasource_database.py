@@ -1,7 +1,6 @@
 #!/bin/env python3
 # -*- coding: utf-8 -*-
 
-from http import HTTPStatus
 import os
 import sys
 import requests
@@ -22,14 +21,15 @@ if __name__ == '__main__':
     params = {
         "datasourceId": datasource_id,
     }
-    
-    response = requests.get(url, headers=headers, params=params)
-    status_code = response.status_code
-    if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}')
+        
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}')
         sys.exit(1)
     
-    json_data = response.json()
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:

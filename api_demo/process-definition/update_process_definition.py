@@ -25,14 +25,15 @@ if __name__ == '__main__':
     params = {
         'genNum': 1
     }
-    
-    response = requests.get(url, headers=headers, params=params)
-    status_code = response.status_code
-    if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}')
-        sys.exit(1)
         
-    json_data = response.json()
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}')
+        sys.exit(1)
+    
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:
@@ -114,14 +115,15 @@ if __name__ == '__main__':
         'otherParamsJson': json.dumps(other_params),
         'executionType': execution_type,
     }
-    
-    response = requests.put(url, headers=headers, params=params)
-    status_code = response.status_code
-    if status_code != HTTPStatus.OK:
-        print(f'Request failed, status: {status_code}')
+
+    try:
+        response = requests.put(url, headers=headers, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f'Request failed, error: {e}')
         sys.exit(1)
     
-    json_data = response.json()
     success = json_data.get('success')
     failed = json_data.get('failed')
     if (not success) or failed:
