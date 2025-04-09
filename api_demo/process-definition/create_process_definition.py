@@ -30,7 +30,7 @@ if __name__ == '__main__':
         json_data = response.json()
     except Exception as e:
         print(f'Request failed, error: {e}')
-        sys.exit(1)    
+        sys.exit(1)
         
     success = json_data.get('success')
     failed = json_data.get('failed')
