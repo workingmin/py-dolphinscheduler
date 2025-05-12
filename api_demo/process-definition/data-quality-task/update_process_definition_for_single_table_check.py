@@ -120,7 +120,7 @@ def offline_process_definition(project_code, process_definition_code):
         }
                 
         try:
-            response = requests.post(url, headers=headers, json=data)
+            response = requests.post(url, headers=headers, json=params)
             response.raise_for_status()
             json_data = response.json()
         except Exception as e:
@@ -151,18 +151,21 @@ if __name__ == '__main__':
     
     rule_id = int(yaml_data.get('taskDefinition').get('taskParams').get('ruleId'))
     if rule_id not in [member.value for member in Rule.__members__.values()]:
-        print(f"Invalid data quality rule id: {rule_id}")
+        print(f"Invalid data quality rule id: {rule_id}.")
         sys.exit(1)
         
     task_code = gen_task_code(project_code)
     if task_code is None or task_code == 0:
+        print("Failed to generate task code.")
         sys.exit(1)
         
     rule_input_parameter_keys = get_rule_form_create_json_keys(rule_id)
     if rule_input_parameter_keys is None or len(rule_input_parameter_keys) == 0:
+        print("Failed to get rule input parameter keys.")
         sys.exit(1)
         
     if not offline_process_definition(project_code, process_definition_code):
+        print("Failed to offline process definition.")
         sys.exit(1)
         
     # Update process definition

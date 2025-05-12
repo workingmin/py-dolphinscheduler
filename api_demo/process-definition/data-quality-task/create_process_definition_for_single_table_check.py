@@ -86,7 +86,7 @@ def get_rule_form_create_json_keys(rule_id):
     return [ x.get('field') for x in form_create_json ]
 
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     if len(sys.argv) < 3:
         print("Usage: {} <project-code> <process-definition-params.yaml>".format(sys.argv[0]))
         sys.exit(1)
@@ -102,10 +102,12 @@ if __name__ == '__main__':
         
     task_code = gen_task_code(project_code)
     if task_code is None or task_code == 0:
+        print(f"Failed to generate task code.")
         sys.exit(1)
         
     rule_input_parameter_keys = get_rule_form_create_json_keys(rule_id)
     if rule_input_parameter_keys is None or len(rule_input_parameter_keys) == 0:
+        print(f"Failed to get rule input parameter keys.")
         sys.exit(1)
         
     # Create process definition
